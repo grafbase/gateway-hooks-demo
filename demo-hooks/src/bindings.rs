@@ -9,7 +9,8 @@ pub mod component {
             #[used]
             #[doc(hidden)]
             #[cfg(target_arch = "wasm32")]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             /// Error thrown when accessing the headers. Headers names or values
             /// must not contain any special characters.
@@ -212,35 +213,6 @@ pub mod component {
                 }
             }
 
-            /// Defines an edge in a type
-            #[derive(Clone)]
-            pub struct EdgeDefinition {
-                /// The name of the type the edge is part of
-                pub parent_type_name: _rt::String,
-                /// The name of the field of this edge
-                pub field_name: _rt::String,
-            }
-            impl ::core::fmt::Debug for EdgeDefinition {
-                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    f.debug_struct("EdgeDefinition")
-                        .field("parent-type-name", &self.parent_type_name)
-                        .field("field-name", &self.field_name)
-                        .finish()
-                }
-            }
-            /// Defines a node
-            #[derive(Clone)]
-            pub struct NodeDefinition {
-                /// The name of the type of this node
-                pub type_name: _rt::String,
-            }
-            impl ::core::fmt::Debug for NodeDefinition {
-                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    f.debug_struct("NodeDefinition")
-                        .field("type-name", &self.type_name)
-                        .finish()
-                }
-            }
             /// An error response can be used to inject an error to the GraphQL response.
             #[derive(Clone)]
             pub struct Error {
@@ -333,7 +305,13 @@ pub mod component {
                         fn wit_import(_: i32, _: *mut u8, _: usize, _: *mut u8, _: usize) {
                             unreachable!()
                         }
-                        wit_import((self).handle() as i32, ptr0.cast_mut(), len0, ptr1.cast_mut(), len1);
+                        wit_import(
+                            (self).handle() as i32,
+                            ptr0.cast_mut(),
+                            len0,
+                            ptr1.cast_mut(),
+                            len1,
+                        );
                     }
                 }
             }
@@ -487,11 +465,25 @@ pub mod component {
                         #[link(wasm_import_module = "component:grafbase/types")]
                         extern "C" {
                             #[link_name = "[method]headers.set"]
-                            fn wit_import(_: i32, _: *mut u8, _: usize, _: *mut u8, _: usize, _: *mut u8);
+                            fn wit_import(
+                                _: i32,
+                                _: *mut u8,
+                                _: usize,
+                                _: *mut u8,
+                                _: usize,
+                                _: *mut u8,
+                            );
                         }
 
                         #[cfg(not(target_arch = "wasm32"))]
-                        fn wit_import(_: i32, _: *mut u8, _: usize, _: *mut u8, _: usize, _: *mut u8) {
+                        fn wit_import(
+                            _: i32,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                        ) {
                             unreachable!()
                         }
                         wit_import(
@@ -625,20 +617,21 @@ pub mod exports {
                 #[used]
                 #[doc(hidden)]
                 #[cfg(target_arch = "wasm32")]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
                 pub type Headers = super::super::super::super::component::grafbase::types::Headers;
                 pub type Error = super::super::super::super::component::grafbase::types::Error;
                 pub type Context = super::super::super::super::component::grafbase::types::Context;
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_on_gateway_request_cabi<T: Guest>(arg0: i32, arg1: i32) -> *mut u8 {
+                pub unsafe fn _export_on_gateway_request_cabi<T: Guest>(
+                    arg0: i32,
+                    arg1: i32,
+                ) -> *mut u8 {
                     #[cfg(target_arch = "wasm32")]
                     _rt::run_ctors_once();
-                    let result0 = T::on_gateway_request(
-                        super::super::super::super::component::grafbase::types::Context::from_handle(arg0 as u32),
-                        super::super::super::super::component::grafbase::types::Headers::from_handle(arg1 as u32),
-                    );
+                    let result0 = T::on_gateway_request(super::super::super::super::component::grafbase::types::Context::from_handle(arg0 as u32), super::super::super::super::component::grafbase::types::Headers::from_handle(arg1 as u32));
                     let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
                     match result0 {
                         Ok(_) => {
@@ -652,7 +645,8 @@ pub mod exports {
                             } = e;
                             let vec6 = extensions2;
                             let len6 = vec6.len();
-                            let layout6 = _rt::alloc::Layout::from_size_align_unchecked(vec6.len() * 16, 4);
+                            let layout6 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec6.len() * 16, 4);
                             let result6 = if layout6.size() != 0 {
                                 let ptr = _rt::alloc::alloc(layout6).cast::<u8>();
                                 if ptr.is_null() {
@@ -753,450 +747,6 @@ pub mod exports {
                 struct _RetArea([::core::mem::MaybeUninit<u8>; 20]);
                 static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 20]);
             }
-
-            #[allow(dead_code, clippy::all)]
-            pub mod authorization {
-                #[used]
-                #[doc(hidden)]
-                #[cfg(target_arch = "wasm32")]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
-                use super::super::super::super::_rt;
-                pub type Error = super::super::super::super::component::grafbase::types::Error;
-                pub type SharedContext = super::super::super::super::component::grafbase::types::SharedContext;
-                pub type EdgeDefinition = super::super::super::super::component::grafbase::types::EdgeDefinition;
-                pub type NodeDefinition = super::super::super::super::component::grafbase::types::NodeDefinition;
-                #[doc(hidden)]
-                #[allow(non_snake_case)]
-                pub unsafe fn _export_authorize_edge_pre_execution_cabi<T: Guest>(
-                    arg0: i32,
-                    arg1: *mut u8,
-                    arg2: usize,
-                    arg3: *mut u8,
-                    arg4: usize,
-                    arg5: *mut u8,
-                    arg6: usize,
-                    arg7: *mut u8,
-                    arg8: usize,
-                ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")]
-                    _rt::run_ctors_once();
-                    let len0 = arg2;
-                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
-                    let len1 = arg4;
-                    let bytes1 = _rt::Vec::from_raw_parts(arg3.cast(), len1, len1);
-                    let len2 = arg6;
-                    let bytes2 = _rt::Vec::from_raw_parts(arg5.cast(), len2, len2);
-                    let len3 = arg8;
-                    let bytes3 = _rt::Vec::from_raw_parts(arg7.cast(), len3, len3);
-                    let result4 = T::authorize_edge_pre_execution(
-                        super::super::super::super::component::grafbase::types::SharedContext::from_handle(arg0 as u32),
-                        super::super::super::super::component::grafbase::types::EdgeDefinition {
-                            parent_type_name: _rt::string_lift(bytes0),
-                            field_name: _rt::string_lift(bytes1),
-                        },
-                        _rt::string_lift(bytes2),
-                        _rt::string_lift(bytes3),
-                    );
-                    let ptr5 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result4 {
-                        Ok(_) => {
-                            *ptr5.add(0).cast::<u8>() = (0i32) as u8;
-                        }
-                        Err(e) => {
-                            *ptr5.add(0).cast::<u8>() = (1i32) as u8;
-                            let super::super::super::super::component::grafbase::types::Error {
-                                extensions: extensions6,
-                                message: message6,
-                            } = e;
-                            let vec10 = extensions6;
-                            let len10 = vec10.len();
-                            let layout10 = _rt::alloc::Layout::from_size_align_unchecked(vec10.len() * 16, 4);
-                            let result10 = if layout10.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout10).cast::<u8>();
-                                if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout10);
-                                }
-                                ptr
-                            } else {
-                                {
-                                    ::core::ptr::null_mut()
-                                }
-                            };
-                            for (i, e) in vec10.into_iter().enumerate() {
-                                let base = result10.add(i * 16);
-                                {
-                                    let (t7_0, t7_1) = e;
-                                    let vec8 = (t7_0.into_bytes()).into_boxed_slice();
-                                    let ptr8 = vec8.as_ptr().cast::<u8>();
-                                    let len8 = vec8.len();
-                                    ::core::mem::forget(vec8);
-                                    *base.add(4).cast::<usize>() = len8;
-                                    *base.add(0).cast::<*mut u8>() = ptr8.cast_mut();
-                                    let vec9 = (t7_1.into_bytes()).into_boxed_slice();
-                                    let ptr9 = vec9.as_ptr().cast::<u8>();
-                                    let len9 = vec9.len();
-                                    ::core::mem::forget(vec9);
-                                    *base.add(12).cast::<usize>() = len9;
-                                    *base.add(8).cast::<*mut u8>() = ptr9.cast_mut();
-                                }
-                            }
-                            *ptr5.add(8).cast::<usize>() = len10;
-                            *ptr5.add(4).cast::<*mut u8>() = result10;
-                            let vec11 = (message6.into_bytes()).into_boxed_slice();
-                            let ptr11 = vec11.as_ptr().cast::<u8>();
-                            let len11 = vec11.len();
-                            ::core::mem::forget(vec11);
-                            *ptr5.add(16).cast::<usize>() = len11;
-                            *ptr5.add(12).cast::<*mut u8>() = ptr11.cast_mut();
-                        }
-                    };
-                    ptr5
-                }
-                #[doc(hidden)]
-                #[allow(non_snake_case)]
-                pub unsafe fn __post_return_authorize_edge_pre_execution<T: Guest>(arg0: *mut u8) {
-                    let l0 = i32::from(*arg0.add(0).cast::<u8>());
-                    match l0 {
-                        0 => (),
-                        _ => {
-                            let l5 = *arg0.add(4).cast::<*mut u8>();
-                            let l6 = *arg0.add(8).cast::<usize>();
-                            let base7 = l5;
-                            let len7 = l6;
-                            for i in 0..len7 {
-                                let base = base7.add(i * 16);
-                                {
-                                    let l1 = *base.add(0).cast::<*mut u8>();
-                                    let l2 = *base.add(4).cast::<usize>();
-                                    _rt::cabi_dealloc(l1, l2, 1);
-                                    let l3 = *base.add(8).cast::<*mut u8>();
-                                    let l4 = *base.add(12).cast::<usize>();
-                                    _rt::cabi_dealloc(l3, l4, 1);
-                                }
-                            }
-                            _rt::cabi_dealloc(base7, len7 * 16, 4);
-                            let l8 = *arg0.add(12).cast::<*mut u8>();
-                            let l9 = *arg0.add(16).cast::<usize>();
-                            _rt::cabi_dealloc(l8, l9, 1);
-                        }
-                    }
-                }
-                #[doc(hidden)]
-                #[allow(non_snake_case)]
-                pub unsafe fn _export_authorize_node_pre_execution_cabi<T: Guest>(
-                    arg0: i32,
-                    arg1: *mut u8,
-                    arg2: usize,
-                    arg3: *mut u8,
-                    arg4: usize,
-                ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")]
-                    _rt::run_ctors_once();
-                    let len0 = arg2;
-                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
-                    let len1 = arg4;
-                    let bytes1 = _rt::Vec::from_raw_parts(arg3.cast(), len1, len1);
-                    let result2 = T::authorize_node_pre_execution(
-                        super::super::super::super::component::grafbase::types::SharedContext::from_handle(arg0 as u32),
-                        super::super::super::super::component::grafbase::types::NodeDefinition {
-                            type_name: _rt::string_lift(bytes0),
-                        },
-                        _rt::string_lift(bytes1),
-                    );
-                    let ptr3 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result2 {
-                        Ok(_) => {
-                            *ptr3.add(0).cast::<u8>() = (0i32) as u8;
-                        }
-                        Err(e) => {
-                            *ptr3.add(0).cast::<u8>() = (1i32) as u8;
-                            let super::super::super::super::component::grafbase::types::Error {
-                                extensions: extensions4,
-                                message: message4,
-                            } = e;
-                            let vec8 = extensions4;
-                            let len8 = vec8.len();
-                            let layout8 = _rt::alloc::Layout::from_size_align_unchecked(vec8.len() * 16, 4);
-                            let result8 = if layout8.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout8).cast::<u8>();
-                                if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout8);
-                                }
-                                ptr
-                            } else {
-                                {
-                                    ::core::ptr::null_mut()
-                                }
-                            };
-                            for (i, e) in vec8.into_iter().enumerate() {
-                                let base = result8.add(i * 16);
-                                {
-                                    let (t5_0, t5_1) = e;
-                                    let vec6 = (t5_0.into_bytes()).into_boxed_slice();
-                                    let ptr6 = vec6.as_ptr().cast::<u8>();
-                                    let len6 = vec6.len();
-                                    ::core::mem::forget(vec6);
-                                    *base.add(4).cast::<usize>() = len6;
-                                    *base.add(0).cast::<*mut u8>() = ptr6.cast_mut();
-                                    let vec7 = (t5_1.into_bytes()).into_boxed_slice();
-                                    let ptr7 = vec7.as_ptr().cast::<u8>();
-                                    let len7 = vec7.len();
-                                    ::core::mem::forget(vec7);
-                                    *base.add(12).cast::<usize>() = len7;
-                                    *base.add(8).cast::<*mut u8>() = ptr7.cast_mut();
-                                }
-                            }
-                            *ptr3.add(8).cast::<usize>() = len8;
-                            *ptr3.add(4).cast::<*mut u8>() = result8;
-                            let vec9 = (message4.into_bytes()).into_boxed_slice();
-                            let ptr9 = vec9.as_ptr().cast::<u8>();
-                            let len9 = vec9.len();
-                            ::core::mem::forget(vec9);
-                            *ptr3.add(16).cast::<usize>() = len9;
-                            *ptr3.add(12).cast::<*mut u8>() = ptr9.cast_mut();
-                        }
-                    };
-                    ptr3
-                }
-                #[doc(hidden)]
-                #[allow(non_snake_case)]
-                pub unsafe fn __post_return_authorize_node_pre_execution<T: Guest>(arg0: *mut u8) {
-                    let l0 = i32::from(*arg0.add(0).cast::<u8>());
-                    match l0 {
-                        0 => (),
-                        _ => {
-                            let l5 = *arg0.add(4).cast::<*mut u8>();
-                            let l6 = *arg0.add(8).cast::<usize>();
-                            let base7 = l5;
-                            let len7 = l6;
-                            for i in 0..len7 {
-                                let base = base7.add(i * 16);
-                                {
-                                    let l1 = *base.add(0).cast::<*mut u8>();
-                                    let l2 = *base.add(4).cast::<usize>();
-                                    _rt::cabi_dealloc(l1, l2, 1);
-                                    let l3 = *base.add(8).cast::<*mut u8>();
-                                    let l4 = *base.add(12).cast::<usize>();
-                                    _rt::cabi_dealloc(l3, l4, 1);
-                                }
-                            }
-                            _rt::cabi_dealloc(base7, len7 * 16, 4);
-                            let l8 = *arg0.add(12).cast::<*mut u8>();
-                            let l9 = *arg0.add(16).cast::<usize>();
-                            _rt::cabi_dealloc(l8, l9, 1);
-                        }
-                    }
-                }
-                pub trait Guest {
-                    /// The hook is called in the request cycle if the schema defines an authorization directive on
-                    /// an edge, providing the arguments of the edge selected in the directive, the definition of the esge
-                    /// and the metadata of the directive to the hook.
-                    ///
-                    /// The hook is run before fetching any data.
-                    ///
-                    /// The result, if an error, will stop the request execution and return an error back to the user.
-                    /// Result of the edge will be null for an error response.
-                    fn authorize_edge_pre_execution(
-                        context: SharedContext,
-                        definition: EdgeDefinition,
-                        arguments: _rt::String,
-                        metadata: _rt::String,
-                    ) -> Result<(), Error>;
-                    /// The hook is called in the request cycle if the schema defines an authorization directive to
-                    /// a node, providing the definition of the node and the metadata of the directive to the hook.
-                    ///
-                    /// The hook is run before fetching any data.
-                    ///
-                    /// The result, if an error, will stop the request execution and return an error back to the user.
-                    /// Result of the edge will be null for an error response.
-                    fn authorize_node_pre_execution(
-                        context: SharedContext,
-                        definition: NodeDefinition,
-                        metadata: _rt::String,
-                    ) -> Result<(), Error>;
-                }
-                #[doc(hidden)]
-
-                macro_rules! __export_component_grafbase_authorization_cabi{
-    ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
-
-      #[export_name = "component:grafbase/authorization#authorize-edge-pre-execution"]
-      unsafe extern "C" fn export_authorize_edge_pre_execution(arg0: i32,arg1: *mut u8,arg2: usize,arg3: *mut u8,arg4: usize,arg5: *mut u8,arg6: usize,arg7: *mut u8,arg8: usize,) -> *mut u8 {
-        $($path_to_types)*::_export_authorize_edge_pre_execution_cabi::<$ty>(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
-      }
-      #[export_name = "cabi_post_component:grafbase/authorization#authorize-edge-pre-execution"]
-      unsafe extern "C" fn _post_return_authorize_edge_pre_execution(arg0: *mut u8,) {
-        $($path_to_types)*::__post_return_authorize_edge_pre_execution::<$ty>(arg0)
-      }
-      #[export_name = "component:grafbase/authorization#authorize-node-pre-execution"]
-      unsafe extern "C" fn export_authorize_node_pre_execution(arg0: i32,arg1: *mut u8,arg2: usize,arg3: *mut u8,arg4: usize,) -> *mut u8 {
-        $($path_to_types)*::_export_authorize_node_pre_execution_cabi::<$ty>(arg0, arg1, arg2, arg3, arg4)
-      }
-      #[export_name = "cabi_post_component:grafbase/authorization#authorize-node-pre-execution"]
-      unsafe extern "C" fn _post_return_authorize_node_pre_execution(arg0: *mut u8,) {
-        $($path_to_types)*::__post_return_authorize_node_pre_execution::<$ty>(arg0)
-      }
-    };);
-  }
-                #[doc(hidden)]
-                pub(crate) use __export_component_grafbase_authorization_cabi;
-                #[repr(align(4))]
-                struct _RetArea([::core::mem::MaybeUninit<u8>; 20]);
-                static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 20]);
-            }
-
-            #[allow(dead_code, clippy::all)]
-            pub mod subgraph_request {
-                #[used]
-                #[doc(hidden)]
-                #[cfg(target_arch = "wasm32")]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
-                use super::super::super::super::_rt;
-                pub type SharedContext = super::super::super::super::component::grafbase::types::SharedContext;
-                pub type Headers = super::super::super::super::component::grafbase::types::Headers;
-                pub type Error = super::super::super::super::component::grafbase::types::Error;
-                #[doc(hidden)]
-                #[allow(non_snake_case)]
-                pub unsafe fn _export_on_subgraph_request_cabi<T: Guest>(
-                    arg0: i32,
-                    arg1: *mut u8,
-                    arg2: usize,
-                    arg3: *mut u8,
-                    arg4: usize,
-                    arg5: *mut u8,
-                    arg6: usize,
-                    arg7: i32,
-                ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")]
-                    _rt::run_ctors_once();
-                    let len0 = arg2;
-                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
-                    let len1 = arg4;
-                    let bytes1 = _rt::Vec::from_raw_parts(arg3.cast(), len1, len1);
-                    let len2 = arg6;
-                    let bytes2 = _rt::Vec::from_raw_parts(arg5.cast(), len2, len2);
-                    let result3 = T::on_subgraph_request(
-                        super::super::super::super::component::grafbase::types::SharedContext::from_handle(arg0 as u32),
-                        _rt::string_lift(bytes0),
-                        _rt::string_lift(bytes1),
-                        _rt::string_lift(bytes2),
-                        super::super::super::super::component::grafbase::types::Headers::from_handle(arg7 as u32),
-                    );
-                    let ptr4 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result3 {
-                        Ok(_) => {
-                            *ptr4.add(0).cast::<u8>() = (0i32) as u8;
-                        }
-                        Err(e) => {
-                            *ptr4.add(0).cast::<u8>() = (1i32) as u8;
-                            let super::super::super::super::component::grafbase::types::Error {
-                                extensions: extensions5,
-                                message: message5,
-                            } = e;
-                            let vec9 = extensions5;
-                            let len9 = vec9.len();
-                            let layout9 = _rt::alloc::Layout::from_size_align_unchecked(vec9.len() * 16, 4);
-                            let result9 = if layout9.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout9).cast::<u8>();
-                                if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout9);
-                                }
-                                ptr
-                            } else {
-                                {
-                                    ::core::ptr::null_mut()
-                                }
-                            };
-                            for (i, e) in vec9.into_iter().enumerate() {
-                                let base = result9.add(i * 16);
-                                {
-                                    let (t6_0, t6_1) = e;
-                                    let vec7 = (t6_0.into_bytes()).into_boxed_slice();
-                                    let ptr7 = vec7.as_ptr().cast::<u8>();
-                                    let len7 = vec7.len();
-                                    ::core::mem::forget(vec7);
-                                    *base.add(4).cast::<usize>() = len7;
-                                    *base.add(0).cast::<*mut u8>() = ptr7.cast_mut();
-                                    let vec8 = (t6_1.into_bytes()).into_boxed_slice();
-                                    let ptr8 = vec8.as_ptr().cast::<u8>();
-                                    let len8 = vec8.len();
-                                    ::core::mem::forget(vec8);
-                                    *base.add(12).cast::<usize>() = len8;
-                                    *base.add(8).cast::<*mut u8>() = ptr8.cast_mut();
-                                }
-                            }
-                            *ptr4.add(8).cast::<usize>() = len9;
-                            *ptr4.add(4).cast::<*mut u8>() = result9;
-                            let vec10 = (message5.into_bytes()).into_boxed_slice();
-                            let ptr10 = vec10.as_ptr().cast::<u8>();
-                            let len10 = vec10.len();
-                            ::core::mem::forget(vec10);
-                            *ptr4.add(16).cast::<usize>() = len10;
-                            *ptr4.add(12).cast::<*mut u8>() = ptr10.cast_mut();
-                        }
-                    };
-                    ptr4
-                }
-                #[doc(hidden)]
-                #[allow(non_snake_case)]
-                pub unsafe fn __post_return_on_subgraph_request<T: Guest>(arg0: *mut u8) {
-                    let l0 = i32::from(*arg0.add(0).cast::<u8>());
-                    match l0 {
-                        0 => (),
-                        _ => {
-                            let l5 = *arg0.add(4).cast::<*mut u8>();
-                            let l6 = *arg0.add(8).cast::<usize>();
-                            let base7 = l5;
-                            let len7 = l6;
-                            for i in 0..len7 {
-                                let base = base7.add(i * 16);
-                                {
-                                    let l1 = *base.add(0).cast::<*mut u8>();
-                                    let l2 = *base.add(4).cast::<usize>();
-                                    _rt::cabi_dealloc(l1, l2, 1);
-                                    let l3 = *base.add(8).cast::<*mut u8>();
-                                    let l4 = *base.add(12).cast::<usize>();
-                                    _rt::cabi_dealloc(l3, l4, 1);
-                                }
-                            }
-                            _rt::cabi_dealloc(base7, len7 * 16, 4);
-                            let l8 = *arg0.add(12).cast::<*mut u8>();
-                            let l9 = *arg0.add(16).cast::<usize>();
-                            _rt::cabi_dealloc(l8, l9, 1);
-                        }
-                    }
-                }
-                pub trait Guest {
-                    /// The hook is called just before sending the HTTP request to the subgraph.
-                    fn on_subgraph_request(
-                        context: SharedContext,
-                        subgraph_name: _rt::String,
-                        method: _rt::String,
-                        url: _rt::String,
-                        headers: Headers,
-                    ) -> Result<(), Error>;
-                }
-                #[doc(hidden)]
-
-                macro_rules! __export_component_grafbase_subgraph_request_cabi{
-  ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
-
-    #[export_name = "component:grafbase/subgraph-request#on-subgraph-request"]
-    unsafe extern "C" fn export_on_subgraph_request(arg0: i32,arg1: *mut u8,arg2: usize,arg3: *mut u8,arg4: usize,arg5: *mut u8,arg6: usize,arg7: i32,) -> *mut u8 {
-      $($path_to_types)*::_export_on_subgraph_request_cabi::<$ty>(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
-    }
-    #[export_name = "cabi_post_component:grafbase/subgraph-request#on-subgraph-request"]
-    unsafe extern "C" fn _post_return_on_subgraph_request(arg0: *mut u8,) {
-      $($path_to_types)*::__post_return_on_subgraph_request::<$ty>(arg0)
-    }
-  };);
-}
-                #[doc(hidden)]
-                pub(crate) use __export_component_grafbase_subgraph_request_cabi;
-                #[repr(align(4))]
-                struct _RetArea([::core::mem::MaybeUninit<u8>; 20]);
-                static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 20]);
-            }
         }
     }
 }
@@ -1275,7 +825,9 @@ mod _rt {
 
     impl<T: WasmResource> fmt::Debug for Resource<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("Resource").field("handle", &self.handle).finish()
+            f.debug_struct("Resource")
+                .field("handle", &self.handle)
+                .finish()
         }
     }
 
@@ -1349,8 +901,6 @@ macro_rules! __export_hooks_impl {
   ($ty:ident) => (self::export!($ty with_types_in self););
   ($ty:ident with_types_in $($path_to_types_root:tt)*) => (
   $($path_to_types_root)*::exports::component::grafbase::gateway_request::__export_component_grafbase_gateway_request_cabi!($ty with_types_in $($path_to_types_root)*::exports::component::grafbase::gateway_request);
-  $($path_to_types_root)*::exports::component::grafbase::authorization::__export_component_grafbase_authorization_cabi!($ty with_types_in $($path_to_types_root)*::exports::component::grafbase::authorization);
-  $($path_to_types_root)*::exports::component::grafbase::subgraph_request::__export_component_grafbase_subgraph_request_cabi!($ty with_types_in $($path_to_types_root)*::exports::component::grafbase::subgraph_request);
   )
 }
 #[doc(inline)]
@@ -1359,9 +909,9 @@ pub(crate) use __export_hooks_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:hooks:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1486] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd2\x0a\x01A\x02\x01\
-A\x0e\x01B\x20\x01m\x02\x14invalid-header-value\x13invalid-header-name\x04\0\x0c\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 949] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb9\x06\x01A\x02\x01\
+A\x07\x01B\x20\x01m\x02\x14invalid-header-value\x13invalid-header-name\x04\0\x0c\
 header-error\x03\0\0\x04\0\x07context\x03\x01\x04\0\x0eshared-context\x03\x01\x04\
 \0\x07headers\x03\x01\x01r\x02\x10parent-type-names\x0afield-names\x04\0\x0fedge\
 -definition\x03\0\x05\x01r\x01\x09type-names\x04\0\x0fnode-definition\x03\0\x07\x01\
@@ -1378,21 +928,9 @@ headers\x02\x03\0\0\x05error\x02\x03\0\0\x07context\x01B\x0b\x02\x03\x02\x01\x01
 \x04\0\x07headers\x03\0\0\x02\x03\x02\x01\x02\x04\0\x05error\x03\0\x02\x02\x03\x02\
 \x01\x03\x04\0\x07context\x03\0\x04\x01i\x05\x01i\x01\x01j\0\x01\x03\x01@\x02\x07\
 context\x06\x07headers\x07\0\x08\x04\0\x12on-gateway-request\x01\x09\x04\x01\"co\
-mponent:grafbase/gateway-request\x05\x04\x02\x03\0\0\x0eshared-context\x02\x03\0\
-\0\x0fedge-definition\x02\x03\0\0\x0fnode-definition\x01B\x0e\x02\x03\x02\x01\x02\
-\x04\0\x05error\x03\0\0\x02\x03\x02\x01\x05\x04\0\x0eshared-context\x03\0\x02\x02\
-\x03\x02\x01\x06\x04\0\x0fedge-definition\x03\0\x04\x02\x03\x02\x01\x07\x04\0\x0f\
-node-definition\x03\0\x06\x01i\x03\x01j\0\x01\x01\x01@\x04\x07context\x08\x0adef\
-inition\x05\x09argumentss\x08metadatas\0\x09\x04\0\x1cauthorize-edge-pre-executi\
-on\x01\x0a\x01@\x03\x07context\x08\x0adefinition\x07\x08metadatas\0\x09\x04\0\x1c\
-authorize-node-pre-execution\x01\x0b\x04\x01\x20component:grafbase/authorization\
-\x05\x08\x01B\x0b\x02\x03\x02\x01\x05\x04\0\x0eshared-context\x03\0\0\x02\x03\x02\
-\x01\x01\x04\0\x07headers\x03\0\x02\x02\x03\x02\x01\x02\x04\0\x05error\x03\0\x04\
-\x01i\x01\x01i\x03\x01j\0\x01\x05\x01@\x05\x07context\x06\x0dsubgraph-names\x06m\
-ethods\x03urls\x07headers\x07\0\x08\x04\0\x13on-subgraph-request\x01\x09\x04\x01\
-#component:grafbase/subgraph-request\x05\x09\x04\x01\x18component:grafbase/hooks\
-\x04\0\x0b\x0b\x01\0\x05hooks\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0d\
-wit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
+mponent:grafbase/gateway-request\x05\x04\x04\x01\x18component:grafbase/hooks\x04\
+\0\x0b\x0b\x01\0\x05hooks\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit\
+-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
 
 #[inline(never)]
 #[doc(hidden)]

@@ -19,12 +19,19 @@ async fn main() -> anyhow::Result<()> {
 
     let app = Router::new()
         .route("/graphql", post_service(GraphQL::new(schema)))
+        .route("/hello", get(hello))
         .route("/", get(graphiql));
 
     println!("GraphiQL IDE: http://localhost:4000");
     axum::serve(TcpListener::bind("127.0.0.1:4000").await?, app).await?;
 
     Ok(())
+}
+
+async fn hello() -> impl IntoResponse {
+    response::Json(serde_json::json!({
+        "hello": "world"
+    }))
 }
 
 async fn graphiql() -> impl IntoResponse {

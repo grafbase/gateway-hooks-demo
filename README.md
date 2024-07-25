@@ -1,12 +1,10 @@
-# Authorization with Grafbase Gateway hooks
+# HTTP and logging with gateway hooks
 
-This is an example how to implement custom authorization hooks with Grafbase Gateway federation.
-Read more on the hooks from the [gateway hooks documentation](https://grafbase.com/docs/self-hosted-gateway/hooks),
-and on the directive from the [@authorized directive documentation](https://grafbase.com/docs/federation/federation-directives#authorized).
+In this example we show how to run async HTTP requests and write logs from gateway hooks.
 
 ## The components of this example
 
-- `authorized-subgraph` has a simple subgraph server
+- `authorized-subgraph` has a simple subgraph server, with a dumb endpoint we can call from the hooks
 - `demo-hooks` contains the code for WebAssembly hooks as a Rust project
 - `federated-schema.graphql` is the federated GraphQL schema
 - `grafbase.toml` has the configuration for the Grafbase Gateway
@@ -56,17 +54,7 @@ Finally start the `grafbase-gateway`:
 grafbase-gateway --schema federated-schema.graphql --config grafbase.toml
 ```
 
-A successful start of the gateway will give the following output:
-
-```
-2024-07-02T17:33:17.242780Z  INFO Grafbase Gateway 0.4.1
-2024-07-02T17:33:17.259341Z  INFO loaded the provided Wasm component successfully
-2024-07-02T17:33:17.260585Z  INFO Waiting for engine to be ready...
-2024-07-02T17:33:17.260633Z  INFO GraphQL endpoint exposed at http://127.0.0.1:5000/graphql
-```
-
-Now open up the GraphQL client and start firing some queries. Read the hooks code in `demo-hooks/src/lib.rs` and adapt the header
-value `x-current-user-id` accordingly to see the authorization hooks in action.
+Now open up the GraphQL client and start firing some queries.
 
 ## Example query
 
@@ -87,5 +75,3 @@ query {
   }
 }
 ```
-
-By changing the `x-current-user-id` header to different values, e.g. between `1` and `2` will give different requests to this query.

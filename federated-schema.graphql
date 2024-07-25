@@ -24,7 +24,7 @@ type Address {
     street: String! @join__field(graph: USERS)
 }
 
-type Secret @authorized {
+type Secret {
     id: Int! @join__field(graph: USERS)
     socialSecurityNumber: String! @join__field(graph: USERS)
 }
@@ -38,6 +38,6 @@ type User {
 
 type Query {
     getSecret(id: Int!): Secret @join__field(graph: USERS)
-    getUser(id: Int!): User @join__field(graph: USERS) @authorized(arguments: "id")
+    getUser(id: Int!): User @join__field(graph: USERS)
 }
 

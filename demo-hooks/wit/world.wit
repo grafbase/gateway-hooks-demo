@@ -136,6 +136,4 @@ interface authorization {
 // The guest must implement all exported hooks defined in the world.
 world hooks {
     export gateway-request;
-    export authorization;
-    export subgraph-request;
 }
