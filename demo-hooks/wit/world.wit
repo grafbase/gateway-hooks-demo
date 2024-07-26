@@ -116,6 +116,22 @@ interface authorization {
         metadata: string
     ) -> result<_, error>;
 
+    //
+    authorize-parent-edge-post-execution: func(
+        context: shared-context,
+        definition: edge-definition,
+        parents: list<string>,
+        metadata: string
+    ) -> list<result<_, error>>;
+
+    //
+    authorize-edge-node-post-execution: func(
+        context: shared-context,
+        definition: edge-definition,
+        nodes: list<string>,
+        metadata: string
+    ) -> list<result<_, error>>;
+
     // The hook is called in the request cycle if the schema defines an authorization directive to
     // a node, providing the definition of the node and the metadata of the directive to the hook.
     //
@@ -136,4 +152,5 @@ interface authorization {
 // The guest must implement all exported hooks defined in the world.
 world hooks {
     export gateway-request;
+    export authorization;
 }
