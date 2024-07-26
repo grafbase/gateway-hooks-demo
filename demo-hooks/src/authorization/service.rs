@@ -40,7 +40,10 @@ pub(super) async fn authorize_user(
                 .post("http://localhost:4001/authorize-user")
                 .json(&request)
                 .send()
-                .and_then(|response| response.bytes())
+                .and_then(|response| {
+                    tracing::info!("{}", response.status());
+                    response.bytes()
+                })
                 .map(|result| match result {
                     Ok(bytes) => {
                         tracing::info!("{}", String::from_utf8_lossy(&bytes));
