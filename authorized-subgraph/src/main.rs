@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use async_graphql::{http::GraphiQLSource, EmptyMutation, EmptySubscription, Schema};
 use async_graphql_axum::GraphQL;
 use axum::{
@@ -29,6 +31,8 @@ async fn main() -> anyhow::Result<()> {
 }
 
 async fn hello() -> impl IntoResponse {
+    tokio::time::sleep(Duration::from_secs(1)).await;
+
     response::Json(serde_json::json!({
         "hello": "world"
     }))

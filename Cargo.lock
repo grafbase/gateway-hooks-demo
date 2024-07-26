@@ -1104,7 +1104,7 @@ checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
 [[package]]
 name = "reqwest"
 version = "0.12.4"
-source = "git+https://github.com/brooksmtownsend/reqwest/?branch=feat/wasi-p2-component-support#b083bbd57f94d74f27b811dfb998b90beb474aca"
+source = "git+https://github.com/pimeys/reqwest/?branch=feat/wasi-p2-component-support#d03809bba22db5424e060fe5cb2f2f4391c8b200"
 dependencies = [
  "base64 0.22.1",
  "bytes",

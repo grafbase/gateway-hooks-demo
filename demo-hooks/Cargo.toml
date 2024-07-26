@@ -18,7 +18,8 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 wit-bindgen-rt = { version = "0.27.0", features = ["bitflags"] }
 
 [dependencies.reqwest]
-git = "https://github.com/brooksmtownsend/reqwest/"
+git = "https://github.com/pimeys/reqwest/"
+# git = "https://github.com/brooksmtownsend/reqwest/"
 branch = "feat/wasi-p2-component-support"
 default-features = false
 features = ["wasm-component", "http2", "rustls-tls", "json"]
