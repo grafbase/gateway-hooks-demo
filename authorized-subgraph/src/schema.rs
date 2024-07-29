@@ -22,7 +22,7 @@ pub struct User {
     #[graphql(
         directive = authorized::apply(None, Some("id".to_string()), None, None)
     )]
-    address: Address,
+    address: Option<Address>,
 }
 
 #[derive(Clone, Copy, SimpleObject)]
@@ -43,30 +43,30 @@ impl Default for Query {
             User {
                 id: 1,
                 name: "Alice",
-                address: Address {
+                address: Some(Address {
                     street: "123 Folsom",
-                },
+                }),
             },
             User {
                 id: 2,
                 name: "Bob",
-                address: Address {
+                address: Some(Address {
                     street: "123 Castro",
-                },
+                }),
             },
             User {
                 id: 3,
                 name: "Musti",
-                address: Address {
+                address: Some(Address {
                     street: "123 Planet",
-                },
+                }),
             },
             User {
                 id: 4,
                 name: "Naukio",
-                address: Address {
+                address: Some(Address {
                     street: "123 Rocket",
-                },
+                }),
             },
         ];
 
@@ -84,8 +84,8 @@ impl Query {
     #[graphql(
         directive = authorized::apply(None, None, Some("id".to_string()), Some(Any(Value::Object([(Name::new("role"), "admin".into())].into()))))
     )]
-    async fn users(&self) -> &Vec<User> {
-        &self.users
+    async fn users(&self) -> Vec<Option<&User>> {
+        self.users.iter().map(Some).collect()
     }
 
     // @authorized(arguments: "id")

@@ -1,0 +1,22 @@
+# Authorization rules:
+# 1. A user with id N can see all users with an ID equal or inferior to his: User 3 can see users 1, 2 and 3 but not 4
+# 2. An admin can see the list of all users
+# 3. The address is only available to the user himself
+
+type Query {
+  # pre-execution authorization
+  user(id: Int!): User @authorized(arguments: "id")
+  # post-execution authorization
+  users: [User]! @authorized(node: "id", metadata: { allowRole: "admin" })
+}
+
+type User {
+  id: Int!
+  name: String!
+  # post-execution authorization
+  address: Address @authorized(fields: "id name")
+}
+
+type Address {
+  street: String!
+}

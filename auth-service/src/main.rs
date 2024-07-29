@@ -1,9 +1,4 @@
-use axum::{
-    body::{Body, Bytes},
-    response::IntoResponse,
-    routing::post,
-    Json, Router,
-};
+use axum::{extract::Path, response::IntoResponse, routing::post, Json, Router};
 use tokio::net::TcpListener;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
@@ -21,8 +16,14 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     let app = Router::new()
-        .route("/authorize-user", post(authorize_user))
-        .route("/authorize-address", post(authorize_address))
+        .route(
+            "/authorize-user/:current_user_id/:user_id",
+            post(authorize_user),
+        )
+        .route(
+            "/authorize-address/:current_user_id/:owner_id",
+            post(authorize_address),
+        )
         .layer(TraceLayer::new_for_http());
 
     println!("Serving authorization service at 127.0.0.1:4001");
@@ -42,12 +43,14 @@ struct AuthorizeUserRequest {
     user_id: usize,
 }
 
-async fn authorize_user(Json(payload): Json<AuthorizeUserRequest>) -> impl IntoResponse {
-    let is_authorized = payload.user_id <= payload.current_user_id;
+async fn authorize_user(
+    Path((current_user_id, user_id)): Path<(usize, usize)>,
+) -> impl IntoResponse {
+    let is_authorized = user_id <= current_user_id;
     tracing::info!(
         "Authorizing access to user {} for user {}: {is_authorized}",
-        payload.user_id,
-        payload.current_user_id
+        user_id,
+        current_user_id
     );
     Json(AuthorizationResponse {
         authorized: is_authorized,
@@ -60,15 +63,15 @@ struct AuthorizeAddressRequest {
     owner_id: usize,
 }
 
-async fn authorize_address(bytes: Bytes) -> impl IntoResponse {
-    tracing::info!("{}", String::from_utf8_lossy(&bytes));
-    // let is_authorized = payload.owner_id == payload.current_user_id;
-    // tracing::info!(
-    //     "Authorizing access to address of user {} for user {}: {is_authorized}",
-    //     payload.owner_id,
-    //     payload.current_user_id
-    // );
-    let is_authorized = true;
+async fn authorize_address(
+    Path((current_user_id, owner_id)): Path<(usize, usize)>,
+) -> impl IntoResponse {
+    let is_authorized = owner_id == current_user_id;
+    tracing::info!(
+        "Authorizing access to address of user {} for user {}: {is_authorized}",
+        owner_id,
+        current_user_id
+    );
     Json(AuthorizationResponse {
         authorized: is_authorized,
     })

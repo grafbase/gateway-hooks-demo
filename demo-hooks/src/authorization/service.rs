@@ -32,21 +32,14 @@ pub(super) async fn authorize_user(
                 current_user_id
             );
 
-            let request = AuthorizeUserRequest {
-                current_user_id,
-                user_id,
-            };
             REQWEST
-                .post("http://localhost:4001/authorize-user")
-                .json(&request)
+                .post(format!(
+                    "http://localhost:4001/authorize-user/{current_user_id}/{user_id}"
+                ))
                 .send()
-                .and_then(|response| {
-                    tracing::info!("{}", response.status());
-                    response.bytes()
-                })
+                .and_then(|response| response.bytes())
                 .map(|result| match result {
                     Ok(bytes) => {
-                        tracing::info!("{}", String::from_utf8_lossy(&bytes));
                         let response: AuthorizationResponse = serde_json::from_slice(&bytes)
                             .expect("Failed to deserialize authorization response");
                         if response.authorized {
@@ -80,21 +73,14 @@ pub(super) async fn authorize_address(
                 current_user_id
             );
 
-            let request = AuthorizeAddressRequest {
-                current_user_id,
-                owner_id,
-            };
             REQWEST
-                .post("http://localhost:4001/authorize-address")
-                .json(&request)
+                .post(format!(
+                    "http://localhost:4001/authorize-address/{current_user_id}/{owner_id}"
+                ))
                 .send()
-                .and_then(|response| {
-                    tracing::info!("{}", response.status());
-                    response.bytes()
-                })
+                .and_then(|response| response.bytes())
                 .map(|result| match result {
                     Ok(bytes) => {
-                        tracing::info!("Bytes: {}", String::from_utf8_lossy(&bytes));
                         let response: AuthorizationResponse = serde_json::from_slice(&bytes)
                             .expect("Failed to deserialize authorization response");
                         if response.authorized {

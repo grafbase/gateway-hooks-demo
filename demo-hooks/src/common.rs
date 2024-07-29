@@ -28,7 +28,7 @@ pub(crate) fn init_logging() {
 
         tracing_subscriber::registry()
             .with(log_layer)
-            .with(EnvFilter::new("info"))
+            .with(EnvFilter::new("debug"))
             .init();
     });
 }
@@ -51,8 +51,8 @@ pub(crate) fn read_input<T: serde::de::DeserializeOwned>(data: &str) -> Result<T
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
 pub(crate) struct Metadata {
-    #[serde(default)]
-    pub allow: Option<String>,
+    #[serde(default, rename = "allowRole")]
+    pub allow_role: Option<String>,
 }
 
 pub(crate) fn error(message: impl Into<String>) -> Error {

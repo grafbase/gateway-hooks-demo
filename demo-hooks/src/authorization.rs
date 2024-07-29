@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::{
     bindings::{
         component::grafbase::types::Error,
@@ -58,23 +60,25 @@ impl authorization::Guest for Component {
             definition.field_name.as_str(),
         ) {
             ("User", "address") => {
-                tracing::info!("Authorizing access to User.address for {parents:?}");
+                tracing::info!(
+                    "Authorizing access to User.address for: {}",
+                    parents.iter().join(", ")
+                );
 
                 #[derive(Debug, serde::Deserialize)]
-                struct Parent {
+                struct User {
                     id: usize,
-                    #[allow(unused)]
-                    name: String,
                 }
 
                 let metadata: Metadata = maybe_read_input(&metadata);
-                if let Some(role) = metadata.allow {
-                    if context.get("role") == Some(role) {
+                if let Some(role) = metadata.allow_role {
+                    if context.get("role") == Some(role.clone()) {
+                        tracing::info!("Granting access to role {role}");
                         return (0..parents.len()).map(|_| Ok(())).collect();
                     }
                 }
 
-                let parents: Vec<Parent> = parents
+                let parents: Vec<User> = parents
                     .into_iter()
                     .map(|parent| read_input(&parent))
                     .collect::<Result<_, _>>()
@@ -84,12 +88,14 @@ impl authorization::Guest for Component {
                     .get("current-user-id")
                     .and_then(|id| id.parse().ok())
                 else {
-                    return (0..parents.len()).map(|_| Ok(())).collect();
+                    return (0..parents.len())
+                        .map(|_| Err(error("No current user id")))
+                        .collect();
                 };
 
                 RUNTIME.block_on(service::authorize_address(
                     current_user_id,
-                    parents.into_iter().map(|Parent { id, .. }| id).collect(),
+                    parents.into_iter().map(|User { id, .. }| id).collect(),
                 ))
             }
             _ => vec![Err(contract_error())],
@@ -109,21 +115,25 @@ impl authorization::Guest for Component {
             definition.field_name.as_str(),
         ) {
             ("Query", "users") => {
-                tracing::info!("Authorizing access to Query.users for {nodes:?}");
+                tracing::info!(
+                    "Authorizing access to Query.users for: {}",
+                    nodes.iter().join(", ")
+                );
 
                 #[derive(Debug, serde::Deserialize)]
-                struct Node {
+                struct User {
                     id: usize,
                 }
 
                 let metadata: Metadata = maybe_read_input(&metadata);
-                if let Some(role) = metadata.allow {
-                    if context.get("role") == Some(role) {
+                if let Some(role) = metadata.allow_role {
+                    if context.get("role") == Some(role.clone()) {
+                        tracing::info!("Granting access to role {role}");
                         return (0..nodes.len()).map(|_| Ok(())).collect();
                     }
                 }
 
-                let nodes: Vec<Node> = nodes
+                let nodes: Vec<User> = nodes
                     .into_iter()
                     .map(|node| read_input(&node))
                     .collect::<Result<_, _>>()
@@ -133,12 +143,14 @@ impl authorization::Guest for Component {
                     .get("current-user-id")
                     .and_then(|id| id.parse().ok())
                 else {
-                    return (0..nodes.len()).map(|_| Ok(())).collect();
+                    return (0..nodes.len())
+                        .map(|_| Err(error("No current user id")))
+                        .collect();
                 };
 
                 RUNTIME.block_on(service::authorize_user(
                     current_user_id,
-                    nodes.into_iter().map(|Node { id, .. }| id).collect(),
+                    nodes.into_iter().map(|User { id, .. }| id).collect(),
                 ))
             }
             _ => vec![Err(contract_error())],
