@@ -33,9 +33,11 @@ pub(super) async fn authorize_user(
             );
 
             REQWEST
-                .post(format!(
-                    "http://localhost:4001/authorize-user/{current_user_id}/{user_id}"
-                ))
+                .post("http://localhost:4001/authorize-user")
+                .json(&AuthorizeUserRequest {
+                    current_user_id,
+                    user_id,
+                })
                 .send()
                 .and_then(|response| response.bytes())
                 .map(|result| match result {
@@ -74,9 +76,11 @@ pub(super) async fn authorize_address(
             );
 
             REQWEST
-                .post(format!(
-                    "http://localhost:4001/authorize-address/{current_user_id}/{owner_id}"
-                ))
+                .post("http://localhost:4001/authorize-address")
+                .json(&AuthorizeAddressRequest {
+                    current_user_id,
+                    owner_id,
+                })
                 .send()
                 .and_then(|response| response.bytes())
                 .map(|result| match result {

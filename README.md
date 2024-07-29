@@ -1,15 +1,15 @@
-# HTTP and logging with gateway hooks
+# Gateway hooks example
 
-In this example we show how to run async HTTP requests and write logs from gateway hooks.
+In this example we will use the gateway hooks to change the behavior of the gateway. This repository contains the following:
 
-## The components of this example
+- `subgraph`: a GraphQL server exposing a few users
+- `auth-service`: a HTTP service imitating an authorization endpoint to grant access to some data.
+- `federated-schema.graphql`: the federated GraphQL schema generated with the `subgraph`.
+- `grafbase.toml`: the configuration for the Grafbase Gateway`
 
-- `authorized-subgraph` has a simple subgraph server, with a dumb endpoint we can call from the hooks
-- `demo-hooks` contains the code for WebAssembly hooks as a Rust project
-- `federated-schema.graphql` is the federated GraphQL schema
-- `grafbase.toml` has the configuration for the Grafbase Gateway
+## Setup
 
-## Dependencies
+### Dependencies
 
 To run this example, you need the Grafbase Gateway version 0.4.0 or later, read more how to install it from:
 
@@ -18,7 +18,7 @@ https://grafbase.com/docs/self-hosted-gateway
 Additionally, the following tools are needed:
 
 - A C compiler, such as clang together with pkg-config (install based on your system, `cc` command is required)
-- If on linux, cargo-component depends on openssl (`libssl-dev` on Debian)
+- If on Linux, cargo-component depends on OpenSSL (`libssl-dev` on Debian)
 - Rust compiler ([install docs](https://www.rust-lang.org/learn/get-started))
 - Cargo component ([install docs](https://github.com/bytecodealliance/cargo-component?tab=readme-ov-file#installation))
 - A GraphQL client, such as [Altair](https://altair-gql.sirmuel.design/)
@@ -29,24 +29,30 @@ For the advanced users using nix with flakes support:
 nix develop
 ```
 
-## Running the example
+### Running the example
 
 First, start the subgraph in one terminal:
 
 ```bash
-cd authorized-subgraph
+cd subgraph
 cargo run --release
 ```
 
-Then, compile the WebAssembly hook functions into a Wasm component in another terminal:
+Then the authorization service:
+
+```sh
+cd auth-service
+cargo run --release
+```
+
+Next compile the WebAssembly hook functions into a Wasm component in another terminal:
 
 ```bash
 cd demo-hooks
 cargo component build --release
 ```
 
-After a successful build, the component can be found from `target/wasm32-wasip1/release/demo_hooks.wasm`.
-This file must exist for us to continue.
+After a successful build, the Wasm component should be located at `target/wasm32-wasip1/release/demo_hooks.wasm`.
 
 Finally start the `grafbase-gateway`:
 
@@ -54,24 +60,52 @@ Finally start the `grafbase-gateway`:
 grafbase-gateway --schema federated-schema.graphql --config grafbase.toml
 ```
 
-Now open up the GraphQL client and start firing some queries.
+Now you are ready to send queries!
 
-## Example query
+## Design
 
-```graphql
-query {
-  getUser(id: 2) {
-    id
-    name
-    address {
-      street
-    }
-    secret {
-      socialSecurityNumber
-    }
-  }
-  getSecret(id: 1) {
-    socialSecurityNumber
-  }
-}
+The hooks implement the following authorization rules:
+
+1. An user with id N can see all users with an ID equal or inferior to N: User 3 can see users 1, 2 and 3 but not 4
+2. An admin can see the list of all users (header `x-role: admin`)
+3. The address is only available to the user himself
+
+The header `x-current-user-id` determines the current user id and `x-role` defines the role.
+
+### Examples
+
+Can not access any user data:
+
+```sh
+curl -X POST http://127.0.0.1:5000/graphql \
+    --data '{"query": "query { user(id: 1) { name } }"}' \
+    -H 'Content-Type: application/json'
+```
+
+Can access one's own data:
+
+```sh
+curl -X POST http://127.0.0.1:5000/graphql \
+    --data '{"query": "query { user(id: 3) { name address { street } } }"}' \
+    -H 'Content-Type: application/json' \
+    -H 'x-current-user-id: 2'
+```
+
+Can access user name from 1 & 2, but not 3 & 4, and only its own address:
+
+```sh
+curl -X POST http://127.0.0.1:5000/graphql \
+    --data '{"query": "query { users { name address { street } } }"}' \
+    -H 'Content-Type: application/json' \
+    -H 'x-current-user-id: 2'
+```
+
+Can access all user names, but only its own address:
+
+```sh
+curl -X POST http://127.0.0.1:5000/graphql \
+    --data '{"query": "query { users { name address { street } } }"}' \
+    -H 'Content-Type: application/json' \
+    -H 'x-current-user-id: 2' \
+    -H 'x-role: admin'
 ```

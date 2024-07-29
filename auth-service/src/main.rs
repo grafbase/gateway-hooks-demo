@@ -1,4 +1,4 @@
-use axum::{extract::Path, response::IntoResponse, routing::post, Json, Router};
+use axum::{response::IntoResponse, routing::post, Json, Router};
 use tokio::net::TcpListener;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
@@ -16,14 +16,8 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     let app = Router::new()
-        .route(
-            "/authorize-user/:current_user_id/:user_id",
-            post(authorize_user),
-        )
-        .route(
-            "/authorize-address/:current_user_id/:owner_id",
-            post(authorize_address),
-        )
+        .route("/authorize-user", post(authorize_user))
+        .route("/authorize-address", post(authorize_address))
         .layer(TraceLayer::new_for_http());
 
     println!("Serving authorization service at 127.0.0.1:4001");
@@ -44,7 +38,10 @@ struct AuthorizeUserRequest {
 }
 
 async fn authorize_user(
-    Path((current_user_id, user_id)): Path<(usize, usize)>,
+    Json(AuthorizeUserRequest {
+        current_user_id,
+        user_id,
+    }): Json<AuthorizeUserRequest>,
 ) -> impl IntoResponse {
     let is_authorized = user_id <= current_user_id;
     tracing::info!(
@@ -64,7 +61,10 @@ struct AuthorizeAddressRequest {
 }
 
 async fn authorize_address(
-    Path((current_user_id, owner_id)): Path<(usize, usize)>,
+    Json(AuthorizeAddressRequest {
+        current_user_id,
+        owner_id,
+    }): Json<AuthorizeAddressRequest>,
 ) -> impl IntoResponse {
     let is_authorized = owner_id == current_user_id;
     tracing::info!(
