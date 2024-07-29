@@ -48,7 +48,7 @@ cargo run --release
 Next compile the WebAssembly hook functions into a Wasm component in another terminal:
 
 ```bash
-cd demo-hooks
+cd hooks
 cargo component build --release
 ```
 
