@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-  "authorized-subgraph", "demo-hooks", "auth-service"
+  "subgraph", "demo-hooks", "auth-service"
 ]
 
 [workspace.package]
