@@ -20,10 +20,9 @@ wit-bindgen-rt = { version = "0.28.0", features = ["bitflags"] }
 
 [dependencies.reqwest]
 git = "https://github.com/pimeys/reqwest/"
-# git = "https://github.com/brooksmtownsend/reqwest/"
 branch = "feat/wasi-p2-component-support"
 default-features = false
-features = ["wasm-component", "http2", "rustls-tls", "json"]
+features = ["wasm-component", "json"]
 
 [lib]
 crate-type = ["cdylib"]
